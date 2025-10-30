@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ромб баланса Пезешкиана</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Главный экран -->
+    <div id="mainScreen" class="screen active">
+        <div class="container">
+            <div class="header">
+                <h1 class="title">Ромб баланса Пезешкиана</h1>
+                <p class="subtitle">Алмазная модель позитивной психотерапии</p>
+            </div>
+            
+            <div class="card intro-card">
+                <p class="intro-text">
+                    Ромб баланса — это инструмент из позитивной психотерапии, который помогает оценить баланс четырех основных сфер жизни: здоровье, деятельность, отношения и смыслы. Модель основана на принципе, что полноценное благополучие достигается через гармоничное распределение энергии между этими областями.
+                </p>
+                <p class="intro-text">
+                    Оцените, сколько времени и внимания вы уделяете каждой сфере, и получите рекомендации по гармонизации жизни.
+                </p>
+                <p class="intro-text" style="background: var(--color-bg-1); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-primary);">
+                    💡 <strong>Совет:</strong> Вы сможете перетаскивать точки на графике мышью или пальцем для изменения значений!
+                </p>
+                
+                <div class="button-group">
+                    <button id="startTestBtn" class="btn btn--primary btn--lg">🎯 Пройти тест</button>
+                    <button id="startManualBtn" class="btn btn--primary btn--lg">✋ Ручная оценка</button>
+                    <button id="infoBtn" class="btn btn--outline btn--lg">ℹ️ О модели</button>
+                </div>
+            </div>
+
+            <div class="spheres-preview">
+                <div class="sphere-preview" style="background: var(--color-bg-3);">
+                    <div class="sphere-icon" style="color: #4CAF50;">💪</div>
+                    <h3>Тело/Здоровье</h3>
+                    <p>Физическое состояние, сон, питание, спорт</p>
+                </div>
+                <div class="sphere-preview" style="background: var(--color-bg-1);">
+                    <div class="sphere-icon" style="color: #2196F3;">🎯</div>
+                    <h3>Деятельность</h3>
+                    <p>Работа, карьера, достижения, финансы</p>
+                </div>
+                <div class="sphere-preview" style="background: var(--color-bg-6);">
+                    <div class="sphere-icon" style="color: #FF9800;">❤️</div>
+                    <h3>Отношения</h3>
+                    <p>Семья, друзья, общение, связи</p>
+                </div>
+                <div class="sphere-preview" style="background: var(--color-bg-5);">
+                    <div class="sphere-icon" style="color: #9C27B0;">✨</div>
+                    <h3>Смыслы</h3>
+                    <p>Цели, мечты, ценности, духовность</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран теста: Этап 1 - Оценка важности -->
+    <div id="importanceTestScreen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button id="backFromImportanceBtn" class="btn btn--secondary">← Назад</button>
+                <h2 class="title">Этап 1: Оценка важности</h2>
+            </div>
+
+            <div class="test-intro card">
+                <p>Оцените, насколько важно для вас каждое утверждение. Используйте шкалу от 0% (совсем не важно) до 100% (крайне важно).</p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="importanceProgress" style="width: 5%;"></div>
+            </div>
+            <div class="progress-text" id="importanceProgressText">Вопрос 1 из 20</div>
+
+            <div id="importanceQuestions" class="questions-container"></div>
+
+            <div class="test-navigation">
+                <button id="nextToStateBtn" class="btn btn--primary btn--lg">Далее ко второму этапу →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран теста: Этап 2 - Оценка текущего состояния -->
+    <div id="stateTestScreen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button id="backToImportanceBtn" class="btn btn--secondary">← Назад</button>
+                <h2 class="title">Этап 2: Оценка текущего состояния</h2>
+            </div>
+
+            <div class="test-intro card">
+                <p>Теперь оцените, насколько каждое утверждение соответствует вашей текущей жизни. Используйте шкалу от 0% (совсем не соответствует) до 100% (полностью соответствует).</p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="stateProgress" style="width: 5%;"></div>
+            </div>
+            <div class="progress-text" id="stateProgressText">Вопрос 1 из 20</div>
+
+            <div id="stateQuestions" class="questions-container"></div>
+
+            <div class="test-navigation">
+                <button id="completeTestBtn" class="btn btn--primary btn--lg">Завершить тест и посмотреть результаты →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран результатов теста -->
+    <div id="testResultsScreen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button id="backFromResultsBtn" class="btn btn--secondary">← На главную</button>
+                <h2 class="title">Результаты теста</h2>
+            </div>
+
+            <div class="results-panel card">
+                <h3>Ваш ромб баланса</h3>
+                <div id="testBalanceScore" class="balance-score"></div>
+            </div>
+
+            <div class="canvas-container" style="margin: 24px auto;">
+                <canvas id="testDiamondCanvas" width="750" height="750"></canvas>
+            </div>
+
+            <div class="results-panel card">
+                <h3>Детальные рекомендации</h3>
+                <div id="testRecommendations" class="recommendations"></div>
+            </div>
+
+            <div class="test-navigation">
+                <button id="saveTestBtn" class="btn btn--primary">💾 Сохранить результаты</button>
+                <button id="retakeTestBtn" class="btn btn--outline">🔄 Пройти тест заново</button>
+                <button id="resetTestBtn" class="btn btn--secondary">🗑️ Сбросить все ответы</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экран оценки -->
+    <div id="assessmentScreen" class="screen">
+        <div class="container">
+            <div class="header">
+                <button id="backBtn" class="btn btn--secondary">← Назад</button>
+                <h2 class="title">Оценка баланса жизни</h2>
+                <button id="infoBtn2" class="btn btn--secondary">ℹ️ Информация</button>
+            </div>
+
+            <div class="assessment-layout">
+                <div class="canvas-container">
+                    <div class="hint-container">
+                        <span class="hint-icon">💡</span>
+                        <span class="hint-text">Перетаскивайте точки вдоль осей для изменения значений</span>
+                    </div>
+                    <canvas id="diamondCanvas" width="750" height="750"></canvas>
+                </div>
+
+                <div class="controls-container">
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label class="control-label">
+                                <span class="sphere-indicator" style="background: #4CAF50;"></span>
+                                Тело/Здоровье
+                            </label>
+                            <span class="control-value" id="bodyValue">25%</span>
+                        </div>
+                        <input type="range" id="bodySlider" class="slider" min="0" max="100" value="25" style="--slider-color: #4CAF50;">
+                        <p class="control-description">Физическое здоровье, сон, питание, спорт, отдых</p>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label class="control-label">
+                                <span class="sphere-indicator" style="background: #2196F3;"></span>
+                                Деятельность/Достижения
+                            </label>
+                            <span class="control-value" id="activityValue">25%</span>
+                        </div>
+                        <input type="range" id="activitySlider" class="slider" min="0" max="100" value="25" style="--slider-color: #2196F3;">
+                        <p class="control-description">Работа, карьера, обучение, финансы, профессиональное развитие</p>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label class="control-label">
+                                <span class="sphere-indicator" style="background: #FF9800;"></span>
+                                Контакты/Отношения
+                            </label>
+                            <span class="control-value" id="contactsValue">25%</span>
+                        </div>
+                        <input type="range" id="contactsSlider" class="slider" min="0" max="100" value="25" style="--slider-color: #FF9800;">
+                        <p class="control-description">Семья, друзья, эмоциональные связи, общение</p>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label class="control-label">
+                                <span class="sphere-indicator" style="background: #9C27B0;"></span>
+                                Смыслы/Будущее
+                            </label>
+                            <span class="control-value" id="meaningValue">25%</span>
+                        </div>
+                        <input type="range" id="meaningSlider" class="slider" min="0" max="100" value="25" style="--slider-color: #9C27B0;">
+                        <p class="control-description">Цели, мечты, планы, ценности, духовная жизнь</p>
+                    </div>
+
+                    <!-- Переключатель эффекта каната -->
+                    <div class="rope-effect-toggle">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="ropeEffect" checked>
+                            <span class="slider-toggle"></span>
+                        </label>
+                        <div class="toggle-info">
+                            <span class="toggle-label">Эффект перетягивания каната</span>
+                            <p class="toggle-description">При включении: изменение одной сферы автоматически корректирует остальные три пропорционально. При выключении: можно изменять каждую сферу независимо.</p>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="saveBtn" class="btn btn--primary">💾 Сохранить результат</button>
+                        <button id="resetBtn" class="btn btn--outline">🔄 Сбросить</button>
+                        <button id="historyBtn" class="btn btn--secondary">📊 История</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-panel card">
+                <h3>Результаты и рекомендации</h3>
+                <div id="balanceScore" class="balance-score"></div>
+                <div id="recommendations" class="recommendations"></div>
+            </div>
+
+            <div id="historyPanel" class="history-panel card">
+                <h3>История измерений</h3>
+                <div id="historyList" class="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно с информацией -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>О модели Пезешкиана</h2>
+                <button id="closeModal" class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <section class="modal-section">
+                    <h3>Что такое Ромб баланса?</h3>
+                    <p>Ромб баланса (Алмазная модель Пезешкиана) — это инструмент из позитивной психотерапии, разработанный немецким психотерапевтом иранского происхождения Носсратом Пезешкианом.</p>
+                    <p>Модель основана на принципе, что полноценное здоровье и счастье человека подразумевает баланс четырех основных сфер жизни. Конфликты и проблемы часто возникают из-за дисбаланса между этими сферами.</p>
+                    <p>Идеальный баланс — когда каждая сфера получает примерно 25% вашей энергии и внимания. Однако важно понимать, что баланс может меняться в зависимости от жизненных обстоятельств, и это нормально. Главное — осознавать текущее состояние и работать над гармонизацией.</p>
+                </section>
+
+                <section class="modal-section">
+                    <h3>Четыре сферы жизни</h3>
+                    
+                    <div class="sphere-detail">
+                        <h4 style="color: #4CAF50;">💪 Тело/Здоровье</h4>
+                        <p>Физическое здоровье, сон, питание, спорт, отдых, секс, внешность, гигиена, самочувствие. Эта сфера включает заботу о теле и физическом состоянии.</p>
+                    </div>
+
+                    <div class="sphere-detail">
+                        <h4 style="color: #2196F3;">🎯 Деятельность/Достижения</h4>
+                        <p>Работа, карьера, обучение, достижения, финансы, профессиональное развитие. Область, связанная с продуктивностью и реализацией в обществе.</p>
+                    </div>
+
+                    <div class="sphere-detail">
+                        <h4 style="color: #FF9800;">❤️ Контакты/Отношения</h4>
+                        <p>Семья, друзья, близкие эмоциональные связи, общение, отношения с людьми. Сфера межличностных контактов и социальной жизни.</p>
+                    </div>
+
+                    <div class="sphere-detail">
+                        <h4 style="color: #9C27B0;">✨ Смыслы/Будущее</h4>
+                        <p>Цели, мечты, планы на будущее, ценности, вера, смыслы жизни, духовность, фантазии. Область, связанная с поиском смысла и перспективами.</p>
+                    </div>
+                </section>
+
+                <section class="modal-section">
+                    <h3>Как интерпретировать результаты</h3>
+                    <ul>
+                        <li><strong>Сбалансированная сфера (15-35%):</strong> Вы уделяете этой области достаточное внимание.</li>
+                        <li><strong>Перегруженная сфера (&gt;35%):</strong> Возможно, вы слишком много энергии вкладываете в эту область в ущерб другим.</li>
+                        <li><strong>Недостаточная сфера (&lt;15%):</strong> Эта область требует большего внимания для достижения баланса.</li>
+                    </ul>
+                </section>
+
+                <section class="modal-section">
+                    <h3>Рекомендации по восстановлению баланса</h3>
+                    <ol>
+                        <li>Определите перегруженные сферы и подумайте, как можно уменьшить в них затраты</li>
+                        <li>Выявите заброшенные области и найдите способы уделить им больше внимания</li>
+                        <li>Используйте ресурсы из сильных сфер для развития слабых</li>
+                        <li>Регулярно отслеживайте свой баланс (раз в месяц)</li>
+                        <li>Помните: идеальный ромб — это ориентир, а не жесткое правило</li>
+                    </ol>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
