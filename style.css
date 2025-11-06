@@ -992,6 +992,7 @@ body {
   border: none;
   text-decoration: none;
   font-family: var(--font-family-base);
+  min-height: 44px;
 }
 
 .btn--primary {
@@ -1086,11 +1087,12 @@ body {
   gap: var(--space-24);
   margin-bottom: var(--space-32);
   align-items: flex-start;
+  flex-direction: column;
 }
 
-@media (max-width: 968px) {
+@media (min-width: 1025px) {
   .assessment-layout {
-    flex-direction: column;
+    flex-direction: row;
   }
 }
 
@@ -1104,14 +1106,14 @@ body {
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-card-border);
   padding: var(--space-24);
-  min-height: 750px;
-  min-width: 750px;
+  min-height: auto;
+  min-width: auto;
+  width: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 #diamondCanvas {
-  width: 750px;
-  height: 750px;
   max-width: 100%;
   max-height: 100%;
   cursor: default;
@@ -1119,15 +1121,22 @@ body {
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+  display: block;
 }
 
 /* Controls */
 .controls-container {
-  width: 400px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--space-12);
   flex-shrink: 0;
+}
+
+@media (min-width: 1025px) {
+  .controls-container {
+    width: 400px;
+  }
 }
 
 .control-group {
@@ -1933,7 +1942,211 @@ body {
   flex-wrap: wrap;
 }
 
-@media (max-width: 768px) {
+/* =========================
+   MOBILE RESPONSIVE DESIGN
+   ========================= */
+
+/* Very Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .screen {
+    padding: var(--space-16) var(--space-12);
+  }
+  
+  .container {
+    padding: 0 var(--space-12);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .subtitle {
+    font-size: var(--font-size-md);
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: var(--space-12);
+    margin-bottom: var(--space-24);
+  }
+  
+  /* Buttons - Touch Friendly */
+  .btn {
+    min-height: 44px;
+    padding: var(--space-12) var(--space-20);
+    font-size: var(--font-size-md);
+  }
+  
+  .btn--lg {
+    min-height: 48px;
+    padding: var(--space-16) var(--space-24);
+  }
+  
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+    gap: var(--space-12);
+  }
+  
+  .button-group .btn {
+    width: 100%;
+  }
+  
+  /* Spheres Preview */
+  .spheres-preview {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+  
+  .sphere-preview {
+    padding: var(--space-16);
+  }
+  
+  /* Canvas Container - Mobile Optimized */
+  .canvas-container {
+    min-height: auto;
+    min-width: auto;
+    padding: var(--space-12);
+    width: 100%;
+  }
+  
+  #diamondCanvas,
+  #testDiamondCanvas {
+    max-width: 100%;
+    height: auto !important;
+  }
+  
+  /* Controls Container */
+  .controls-container {
+    width: 100%;
+  }
+  
+  /* Sliders - Touch Friendly */
+  .slider {
+    height: 10px;
+    margin: 10px 0;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .slider-wrapper .slider {
+    height: 12px;
+  }
+  
+  .slider-wrapper .slider::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .slider-wrapper .slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-buttons .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  
+  /* Notification */
+  .notification-container {
+    left: var(--space-12);
+    right: var(--space-12);
+    bottom: var(--space-12);
+    max-width: none;
+  }
+  
+  /* Test Navigation */
+  .test-navigation {
+    flex-direction: column;
+  }
+  
+  .test-navigation .btn {
+    width: 100%;
+  }
+  
+  /* Question Cards */
+  .question-card {
+    padding: var(--space-16);
+  }
+  
+  .question-card h3 {
+    font-size: var(--font-size-md);
+  }
+  
+  /* Rope Effect Toggle */
+  .rope-effect-toggle {
+    padding: var(--space-12);
+  }
+  
+  .toggle-label {
+    font-size: 13px;
+  }
+  
+  .toggle-description {
+    font-size: 10px;
+  }
+  
+  /* Hint Container */
+  .hint-container {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  
+  .hint-text {
+    font-size: 10px;
+  }
+  
+  /* Modal */
+  .modal-content {
+    margin: var(--space-12);
+  }
+  
+  .modal-header {
+    padding: var(--space-16);
+  }
+  
+  .modal-body {
+    padding: var(--space-16);
+    max-height: 60vh;
+  }
+  
+  /* Cards */
+  .card {
+    padding: var(--space-16);
+  }
+  
+  .intro-text {
+    font-size: var(--font-size-md);
+  }
+}
+
+/* Mobile & Tablet (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+  
   .title {
     font-size: var(--font-size-3xl);
   }
@@ -1952,15 +2165,42 @@ body {
   }
   
   .spheres-preview {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .canvas-container {
-    padding: var(--space-12);
+    padding: var(--space-16);
+    min-height: auto;
+    min-width: auto;
+    width: 100%;
   }
   
-  #diamondCanvas {
+  #diamondCanvas,
+  #testDiamondCanvas {
+    max-width: 100%;
+    height: auto !important;
+  }
+  
+  .controls-container {
     width: 100%;
+  }
+  
+  .btn {
+    min-height: 44px;
+  }
+  
+  .slider {
+    height: 8px;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
   }
   
   .action-buttons {
@@ -1985,16 +2225,38 @@ body {
   .test-navigation .btn {
     width: 100%;
   }
-  
-  .settings-panel {
-    padding: var(--space-16);
+}
+
+/* Tablet & Small Desktop (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .canvas-container {
+    min-height: auto;
+    min-width: auto;
   }
   
-  .toggle-switch {
+  #diamondCanvas,
+  #testDiamondCanvas {
+    max-width: 100%;
+    height: auto !important;
+  }
+  
+  .controls-container {
+    width: 350px;
+  }
+}
+
+/* Desktop (1025px and above) - Default styles apply */
+@media (min-width: 1025px) {
+  .assessment-layout {
     flex-direction: row;
   }
   
-  .question-card {
-    padding: var(--space-16);
+  .canvas-container {
+    min-height: 750px;
+    min-width: 750px;
+  }
+  
+  .controls-container {
+    width: 400px;
   }
 }

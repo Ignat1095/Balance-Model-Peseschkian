@@ -48,7 +48,7 @@ const testQuestions = {
     // Тело/Здоровье
     [
       "Насколько важно для вас иметь хорошее физическое самочувствие?",
-      "Важна ли для вас ваша внешность (осанка, жесты, манера держаться)?",
+      "Насколько важны для вас психологическое спокойствие и умение восстанавливаться после стресса?",
       "Насколько важно для вас правильное питание?",
       "Важен ли для вас качественный сон и отдых?",
       "Насколько важна для вас регулярная физическая активность?",
@@ -70,12 +70,12 @@ const testQuestions = {
       "Насколько важно для вас умение выстраивать контакт с людьми?",
       "Важно ли вам не чувствовать себя одиноким?",
       "Насколько важны для вас отношения с родными (родители, братья, сестры, бабушки, дедушки)?",
-      "Важно ли вам, чтобы общение с вашим кругом было интересным и насыщенным?"
+      "Насколько важна для вас поддержка и понимание от близких людей?"
     ],
     // Смыслы/Будущее
     [
       "Насколько важны для вас жизненные цели и планы на будущее?",
-      "Важны ли для вас мечты и фантазии о будущем?",
+      "Насколько важно для вас получать удовольствие и радость от движения к своим жизненным целям?",
       "Насколько важно для вас иметь контроль над происходящим в вашей жизни?",
       "Важно ли вам иметь возможность обсуждать свои переживания с кем-то (психолог, близкие, друзья)?",
       "Насколько важна для вас способность мечтать и фантазировать?",
@@ -86,7 +86,7 @@ const testQuestions = {
     // Тело/Здоровье
     [
       "У меня хорошее физическое самочувствие",
-      "Я доволен своей внешностью и манерой держаться",
+      "Я хорошо справляюсь со стрессом и быстро восстанавливаюсь",
       "Я питаюсь правильно и сбалансированно",
       "Я высыпаюсь и полноценно отдыхаю",
       "Я регулярно занимаюсь физической активностью",
@@ -108,12 +108,12 @@ const testQuestions = {
       "Я легко выстраиваю контакт с людьми",
       "Я не чувствую себя одиноким",
       "У меня хорошие отношения с родными (родители, братья, сестры, бабушки, дедушки)",
-      "Мне интересно с моим нынешним кругом общения"
+      "Я получаю достаточно поддержки и понимания от близких людей"
     ],
     // Смыслы/Будущее
     [
       "У меня есть четкие жизненные цели и планы",
-      "У меня есть вдохновляющие мечты о будущем",
+      "Я получаю удовольствие и радость от процесса движения к своим целям",
       "Я сам контролирую происходящее в моей жизни (а не другие люди или обстоятельства)",
       "У меня есть с кем обсудить свои переживания (психолог, понимающие близкие, друзья)",
       "Я часто мечтаю и позволяю себе фантазировать",
@@ -194,16 +194,63 @@ const POINT_RADIUS = {
   clickArea: 15
 };
 
+// Определение размера canvas в зависимости от размера экрана
+function getCanvasSize() {
+  const screenWidth = window.innerWidth;
+  
+  if (screenWidth <= 480) {
+    // Малые мобильные устройства
+    return { width: 400, height: 400, axisLength: 130 };
+  } else if (screenWidth <= 768) {
+    // Мобильные устройства и планшеты
+    return { width: 500, height: 500, axisLength: 160 };
+  } else if (screenWidth <= 1024) {
+    // Планшеты и малые ноутбуки
+    return { width: 600, height: 600, axisLength: 190 };
+  } else {
+    // Десктопы
+    return { width: 750, height: 750, axisLength: 220 };
+  }
+}
+
+// Настройка размера canvas
+function setupCanvasSize() {
+  const size = getCanvasSize();
+  
+  elements.canvas.width = size.width;
+  elements.canvas.height = size.height;
+  
+  elements.testCanvas.width = size.width;
+  elements.testCanvas.height = size.height;
+}
+
 // Инициализация
 function init() {
   ctx = elements.canvas.getContext('2d');
   testCtx = elements.testCanvas.getContext('2d');
+  setupCanvasSize();
   setupEventListeners();
   setupCanvasInteraction();
   drawDiamond();
   updateRecommendations();
   renderHistory();
   initializeTestData();
+  
+  // Обработчик изменения размера окна
+  window.addEventListener('resize', handleResize);
+}
+
+// Обработчик изменения размера окна
+let resizeTimeout;
+function handleResize() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    setupCanvasSize();
+    drawDiamond();
+    if (state.currentScreen === 'testResults') {
+      drawTestDiamond();
+    }
+  }, 250);
 }
 
 // Инициализация данных теста - ЗАГРУЗКА ПРЕДЫДУЩИХ ОТВЕТОВ
@@ -291,6 +338,18 @@ function setupEventListeners() {
   });
 }
 
+// Получение корректной позиции мыши с учётом масштабирования canvas
+function getMousePos(canvas, evt) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  
+  return {
+    x: (evt.clientX - rect.left) * scaleX,
+    y: (evt.clientY - rect.top) * scaleY
+  };
+}
+
 // Настройка интерактивности Canvas
 function setupCanvasInteraction() {
   const canvas = elements.canvas;
@@ -376,11 +435,8 @@ function handleCanvasMouseDown(e) {
     return;
   }
   
-  const rect = elements.canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  
-  const pointIndex = getPointAtPosition(x, y);
+  const mousePos = getMousePos(elements.canvas, e);
+  const pointIndex = getPointAtPosition(mousePos.x, mousePos.y);
   
   if (pointIndex !== -1) {
     isDragging = true;
@@ -393,16 +449,14 @@ function handleCanvasMouseDown(e) {
 
 // Обработчик mousemove
 function handleCanvasMouseMove(e) {
-  const rect = elements.canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+  const mousePos = getMousePos(elements.canvas, e);
   
   if (isDragging && draggedPointIndex !== -1) {
     e.preventDefault();
     e.stopPropagation();
     
     // Вычисляем новое значение
-    const newValue = calculateValueFromPosition(draggedPointIndex, x, y);
+    const newValue = calculateValueFromPosition(draggedPointIndex, mousePos.x, mousePos.y);
     const keys = ['body', 'activity', 'contacts', 'meaning'];
     const changedKey = keys[draggedPointIndex];
     
@@ -411,7 +465,7 @@ function handleCanvasMouseMove(e) {
     
   } else {
     // Проверяем наведение на точки
-    const pointIndex = getPointAtPosition(x, y);
+    const pointIndex = getPointAtPosition(mousePos.x, mousePos.y);
     
     if (pointIndex !== -1) {
       hoveredPointIndex = pointIndex;
@@ -454,12 +508,10 @@ function handleCanvasMouseLeave(e) {
 // Touch обработчики
 function handleCanvasTouchStart(e) {
   e.preventDefault();
-  const rect = elements.canvas.getBoundingClientRect();
   const touch = e.touches[0];
-  const x = touch.clientX - rect.left;
-  const y = touch.clientY - rect.top;
+  const mousePos = getMousePos(elements.canvas, touch);
   
-  const pointIndex = getPointAtPosition(x, y);
+  const pointIndex = getPointAtPosition(mousePos.x, mousePos.y);
   
   if (pointIndex !== -1) {
     isDragging = true;
@@ -471,12 +523,10 @@ function handleCanvasTouchMove(e) {
   e.preventDefault();
   
   if (isDragging && draggedPointIndex !== -1) {
-    const rect = elements.canvas.getBoundingClientRect();
     const touch = e.touches[0];
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
+    const mousePos = getMousePos(elements.canvas, touch);
     
-    const newValue = calculateValueFromPosition(draggedPointIndex, x, y);
+    const newValue = calculateValueFromPosition(draggedPointIndex, mousePos.x, mousePos.y);
     const keys = ['body', 'activity', 'contacts', 'meaning'];
     const changedKey = keys[draggedPointIndex];
     
@@ -1325,12 +1375,17 @@ function completeTest() {
     state.lastTestData.currentStateScores[i] = [...state.testData.currentStateScores[i]];
   }
   
+  // АВТОМАТИЧЕСКИ СОХРАНЯЕМ РЕЗУЛЬТАТ (без действий пользователя)
+  autoSaveTestResult();
+  
   // Отображаем результаты
   showTestResults();
 }
 
 // Отображение результатов теста
 function showTestResults() {
+  // Настраиваем размер canvas перед рисованием
+  setupCanvasSize();
   // Рисуем график
   drawTestDiamond();
   
@@ -1601,7 +1656,39 @@ function drawCurrentDiamond2(context, centerX, centerY, maxRadius) {
   // drawPercentageValues2(context, centerX, centerY, maxRadius);
 }
 
-// Сохранение результатов теста
+// Автоматическое сохранение результатов теста (без уведомления)
+function autoSaveTestResult() {
+  const now = new Date();
+  const dateStr = now.toLocaleString('ru-RU', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  
+  const result = {
+    date: dateStr,
+    timestamp: now.getTime(),
+    values: { ...state.values },
+    balance: calculateBalance(),
+    source: 'Тест'
+  };
+  
+  state.history.unshift(result);
+  
+  // Ограничиваем историю до 50 результатов
+  if (state.history.length > 50) {
+    state.history = state.history.slice(0, 50);
+  }
+  
+  renderHistory();
+  
+  // Показываем уведомление об автосохранении
+  showNotification('✓ Результат автоматически сохранен в истории');
+}
+
+// Сохранение результатов теста (ручное)
 function saveTestResult() {
   const now = new Date();
   const dateStr = now.toLocaleString('ru-RU', {
@@ -1622,12 +1709,13 @@ function saveTestResult() {
   
   state.history.unshift(result);
   
-  if (state.history.length > 10) {
-    state.history = state.history.slice(0, 10);
+  // Ограничиваем историю до 50 результатов
+  if (state.history.length > 50) {
+    state.history = state.history.slice(0, 50);
   }
   
   renderHistory();
-  showNotification('Результаты теста успешно сохранены!');
+  showNotification('Результаты теста сохранены вручную!');
 }
 
 // Сброс всех ответов теста до значений по умолчанию
